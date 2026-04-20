@@ -11,7 +11,7 @@ class Publisher(Node):
 
     def timer_callback(self):
         msg = String()
-        msg.data = 'Hello, world! %d' % self.i
+        msg.data = 'Hello, ROS2! %d' % self.i
         self.publisher_.publish(msg)
         self.get_logger().info('Publishing: "%s"' % msg.data)
         self.i += 1
