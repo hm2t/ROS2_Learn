@@ -9,7 +9,7 @@ import rclpy
 from rclpy.node import Node
 
 # 导入参数类型和描述符
-from rcl_interfaces.msg import ParameterType, ParameterDescriptor
+from rcl_interfaces.msg import ParameterType, ParameterDescriptor, SetParametersResult
 
 
 class ParameterNode(Node):
@@ -133,7 +133,7 @@ class ParameterNode(Node):
                 rate = param.value.double_value
                 if rate <= 0:
                     self.get_logger().warn(f"发布频率必须大于0，当前值: {rate}")
-                    return rclpy.parameter.SetParametersResult(success=False, reason="rate must be positive")
+                    return SetParametersResult(success=False, reason="rate must be positive")
                 self.get_logger().info(f"发布频率已修改为: {rate} Hz")
                 # 更新定时器间隔以应用新频率
                 old_timer = self.timer
@@ -144,7 +144,7 @@ class ParameterNode(Node):
                 self.get_logger().info(f"调试模式已修改为: {param.value}")
 
         # 返回成功结果，允许参数修改
-        return rclpy.parameter.SetParametersResult(success=True)
+        return SetParametersResult(success=True)
 
 
 def main(args=None):
