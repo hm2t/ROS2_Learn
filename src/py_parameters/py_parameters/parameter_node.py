@@ -130,11 +130,15 @@ class ParameterNode(Node):
             if param.name == "robot_name":
                 self.get_logger().info(f"机器人名称已修改为: {param.value}")
             elif param.name == "publish_rate":
-                self.get_logger().info(f"发布频率已修改为: {param.value} Hz")
+                rate = param.value.double_value
+                if rate <= 0:
+                    self.get_logger().warn(f"发布频率必须大于0，当前值: {rate}")
+                    return rclpy.parameter.SetParametersResult(success=False, reason="rate must be positive")
+                self.get_logger().info(f"发布频率已修改为: {rate} Hz")
                 # 更新定时器间隔以应用新频率
-                rate = param.value
-                self.timer.cancel()  # 取消当前定时器
-                # 创建新的定时器
+                old_timer = self.timer
+                old_timer.cancel()
+                old_timer.destroy()  # 释放旧定时器资源
                 self.timer = self.create_timer(1.0 / rate, self.timer_callback)
             elif param.name == "enable_debug":
                 self.get_logger().info(f"调试模式已修改为: {param.value}")
