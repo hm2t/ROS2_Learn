@@ -2,3 +2,7 @@
 build/
 install/
 log/
+.claude/
+.omc
+.playwright/
+CLAUDE.md
